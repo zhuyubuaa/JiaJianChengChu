@@ -51,6 +51,34 @@ public class Computer extends User {
         }
     }
 
+    public int noPrintPut(int top, Cards mainCards, int[] usedCnt, int[] easyCnt) {
+        ArrayList<Integer> myCards = getMyCards();
+        if (myCards.contains(top)) {
+            myCards.remove(Integer.valueOf(top));
+            easyCnt[top]++;
+            return top;
+        } else {
+            Integer itemA;
+            Integer itemB;
+            for (int i = 0; i < myCards.size(); i++) {
+                itemA = myCards.get(i);
+                for (int j = i + 1; j < myCards.size(); j++) {
+                    itemB = myCards.get(j);
+                    if (i != j && calLegal(itemA, itemB, top)) {
+                        myCards.remove(itemA);
+                        myCards.remove(itemB);
+                        easyCnt[Math.max(itemA, itemB)]++;
+                        usedCnt[itemA]++;
+                        usedCnt[itemB]++;
+                        return Math.max(itemA, itemB);
+                    }
+                }
+            }
+            pickOne(mainCards);
+            return noPrintPut(top, mainCards, usedCnt, easyCnt);
+        }
+    }
+
     public void showCards(boolean detail) {
         if (detail) {
             System.out.println("(" + name + " now has " + myCards + ")");

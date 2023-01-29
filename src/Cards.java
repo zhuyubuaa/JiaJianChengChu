@@ -17,7 +17,6 @@ public class Cards extends ArrayList<Integer> { //牌堆用此维护
     public int onePicked() {
         if (this.size() == 0) {
             fillMain();
-            System.out.println("Main cards refreshed.");
         }
         int random = (int) (Math.random() * this.size());
         Integer result = this.get(random);

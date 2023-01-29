@@ -1,4 +1,5 @@
 public class Mode {
+
     public static void cvc() {
         Cards mainCards = new Cards();
         Computer computerA = new Computer(mainCards, "A");
@@ -64,6 +65,38 @@ public class Mode {
     }
 
     public static void tutorial() {
-System.out.println("It's simple. ");
+        System.out.println("从1－13各四张一副牌，开局抽5张。\n" +
+                "使用一张或者两张牌通过加减乘除四则运算计算凑出牌堆顶部的牌大小则可打出，\n" +
+                "若手牌无法凑出牌堆顶牌，则摸牌，直到可以打出，当牌打光时获胜\n" +
+                "                                       --coward");
+        System.out.println("Press enter to return to beginning.");
+        MainClass.SCANNER.nextLine();
+    }
+
+    public static void statistics(int n) {
+        int[] usedCnt = new int[20];
+        int[] easyCnt = new int[20];
+        for (int i = 0; i < n; i++) {
+            Cards mainCards = new Cards();
+            Computer computerA = new Computer(mainCards, "A");
+            Computer computerB = new Computer(mainCards, "B");
+            int top = mainCards.onePicked();
+            while (true) {
+                top = computerA.noPrintPut(top, mainCards, usedCnt, easyCnt);
+                if (computerA.allUsed()) {
+                    break;
+                }
+                top = computerB.noPrintPut(top, mainCards, usedCnt, easyCnt);
+                if (computerB.allUsed()) {
+                    break;
+                }
+            }
+        }
+        for (int i = 1; i <= 13; i++) {
+            System.out.println(i + "'s usedCnt is " + usedCnt[i] + " and " + i + "'s easyCnt is " + easyCnt[i]);
+        }
+        System.out.println();
+        System.out.println("Press enter to return to beginning.");
+        MainClass.SCANNER.nextLine();
     }
 }
