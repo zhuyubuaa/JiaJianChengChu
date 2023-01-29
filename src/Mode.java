@@ -65,10 +65,12 @@ public class Mode {
     }
 
     public static void tutorial() {
+        PrintLine();
         System.out.println("从1－13各四张一副牌，开局抽5张。\n" +
                 "使用一张或者两张牌通过加减乘除四则运算计算凑出牌堆顶部的牌大小则可打出，\n" +
                 "若手牌无法凑出牌堆顶牌，则摸牌，直到可以打出，当牌打光时获胜\n" +
                 "                                       --coward");
+        PrintLine();
         System.out.println("Press enter to return to beginning.");
         MainClass.SCANNER.nextLine();
     }
@@ -95,7 +97,8 @@ public class Mode {
         for (int i = 1; i <= 13; i++) {
             System.out.println(i + "'s usedCnt is " + usedCnt[i] + " and " + i + "'s easyCnt is " + easyCnt[i]);
         }
-        System.out.println();
+        PrintLine();
+        MainClass.SCANNER.nextLine();
         System.out.println("Press enter to return to beginning.");
         MainClass.SCANNER.nextLine();
     }

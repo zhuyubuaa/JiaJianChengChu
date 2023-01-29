@@ -40,15 +40,22 @@ public class MainClass {
     }
 
     private static void statisticsTips() {
+        PrintLine();
         System.out.println("It is statistic mode. \n" +
                 "Card A's usedCnt counts how many times A was used for calculate\n" +
                 "and its easyCnt counts how many times A was put on the top." +
                 "\n" +
                 "This statistic may help you find some interesting laws about this game" +
-                " and computer's logic."+
+                " and computer's logic.\n"+
                 "Your computer will play this game with its logic for any time you set below.\n" +
-                "and finally statistics result will be shown on the screen.");
+                "And finally statistics result will be shown on the screen.");
+        PrintLine();
         System.out.print("How many times do you want to set? ");
+    }
+
+    private static void PrintLine() {
+        System.out.println("------------------------------------------------------------------------------------");
+
     }
 
     public static void beginning() {
