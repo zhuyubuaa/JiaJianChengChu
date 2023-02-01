@@ -1,25 +1,24 @@
 public class Mode {
 
-    public static void cvc() {
+    public static void cvc(int pcNum) {
         Cards mainCards = new Cards();
-        Computer computerA = new Computer(mainCards, "A");
-        Computer computerB = new Computer(mainCards, "B");
-
+        Computer[] computers = generateComputers(mainCards, pcNum);
         int top = start(mainCards);
-        computerA.showCards(true);
-        computerB.showCards(true);
-        while (true) {
-            top = computerA.put(top, mainCards, true);
-            if (computerA.allUsed()) {
-                System.out.println(computerA.name + " win!");
-                break;
-            }
-            top = computerB.put(top, mainCards, true);
-            if (computerB.allUsed()) {
-                System.out.println(computerB.name + " win!");
-                break;
-            }
+        for (int i = 0; i < pcNum; i++) {
+            computers[i].showCards(true);
         }
+        boolean endPlay = false;
+        do {
+            for (int j = 0; j < pcNum; j++) {
+                top = computers[j].put(top, mainCards, true);
+                if (computers[j].allUsed()) {
+                    System.out.println(computers[j].name + " wins!");
+                    PrintLine();
+                    endPlay = true;
+                    break;
+                }
+            }
+        } while (!endPlay);
         System.out.println("Press enter to return to beginning.");
         MainClass.SCANNER.nextLine();
     }
@@ -75,31 +74,53 @@ public class Mode {
         MainClass.SCANNER.nextLine();
     }
 
-    public static void statistics(int n) {
+    public static void statistics(int n, int pcNum) {
         int[] usedCnt = new int[20];
         int[] easyCnt = new int[20];
+        Computer[] computers;
+        int[] WinTimes = new int[pcNum];
+        int roundTimes = 0;
         for (int i = 0; i < n; i++) {
+            boolean endPlay = false;
             Cards mainCards = new Cards();
-            Computer computerA = new Computer(mainCards, "A");
-            Computer computerB = new Computer(mainCards, "B");
+            computers = generateComputers(mainCards, pcNum);
             int top = mainCards.onePicked();
-            while (true) {
-                top = computerA.noPrintPut(top, mainCards, usedCnt, easyCnt);
-                if (computerA.allUsed()) {
-                    break;
+            boolean init = true;
+            do {
+                for (int j = init ? i % pcNum : 0; j < pcNum; j++) {
+                    top = computers[j].noPrintPut(top, mainCards, usedCnt, easyCnt);
+                    roundTimes++;
+                    if (computers[j].allUsed()) {
+                        WinTimes[j]++;
+                        endPlay = true;
+                        break;
+                    }
                 }
-                top = computerB.noPrintPut(top, mainCards, usedCnt, easyCnt);
-                if (computerB.allUsed()) {
-                    break;
-                }
-            }
+                init = false;
+            } while (!endPlay);
         }
         for (int i = 1; i <= 13; i++) {
             System.out.println(i + "'s usedCnt is " + usedCnt[i] + " and " + i + "'s easyCnt is " + easyCnt[i]);
         }
+        char name;
+        for (int i = 0; i < pcNum; i++) {
+            name = (char) ('A' + i);
+            System.out.println(name + " wins " + WinTimes[i] + " times.");
+        }
+        System.out.println("Average round time is " + roundTimes / n + ".");
         PrintLine();
         MainClass.SCANNER.nextLine();
         System.out.println("Press enter to return to beginning.");
         MainClass.SCANNER.nextLine();
     }
+
+    public static Computer[] generateComputers(Cards mainCards, int pcNum) {
+        Computer[] computers = new Computer[pcNum];
+        for (int i = 0; i < pcNum; i++) {
+            char name = (char) ('A' + i);
+            computers[i] = new Computer(mainCards, Character.toString(name));
+        }
+        return computers;
+    }
+
 }

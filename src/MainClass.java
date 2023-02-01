@@ -16,12 +16,16 @@ public class MainClass {
                     Mode.tutorial();
                     break;
                 case "3":
-                    Mode.cvc();
+                    System.out.println("How many conputers do you want to imitate?");
+                    int pcNum = SCANNER.nextInt();
+                    Mode.cvc(pcNum);
                     break;
                 case "s":
                     statisticsTips();
                     int n = SCANNER.nextInt();
-                    Mode.statistics(n);
+                    System.out.println("How many conputers do you want to imitate?");
+                    pcNum = SCANNER.nextInt();
+                    Mode.statistics(n, pcNum);
                     break;
                 case "e":
                     exit = true;
@@ -46,7 +50,7 @@ public class MainClass {
                 "and its easyCnt counts how many times A was put on the top." +
                 "\n" +
                 "This statistic may help you find some interesting laws about this game" +
-                " and computer's logic.\n"+
+                " and computer's logic.\n" +
                 "Your computer will play this game with its logic for any time you set below.\n" +
                 "And finally statistics result will be shown on the screen.");
         PrintLine();
