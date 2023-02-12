@@ -1,7 +1,24 @@
 public class Mode {
 
-    public static void cvc(int pcNum) {
-        Cards mainCards = new Cards();
+    private Cards mainCards;
+
+    public Cards getMainCards() {
+        return mainCards;
+    }
+
+    public Cards getLeftCards() {
+        return leftCards;
+    }
+
+    private final Cards leftCards;
+
+    public Mode() {
+        this.mainCards = new Cards();
+        this.mainCards.fillMain();
+        this.leftCards = new Cards();
+    }
+
+    public void cvc(int pcNum) {
         Computer[] computers = generateComputers(mainCards, pcNum);
         int top = start(mainCards);
         for (int i = 0; i < pcNum; i++) {
@@ -10,7 +27,7 @@ public class Mode {
         boolean endPlay = false;
         do {
             for (int j = 0; j < pcNum; j++) {
-                top = computers[j].put(top, mainCards, true);
+                top = computers[j].put(top, true);
                 if (computers[j].allUsed()) {
                     System.out.println(computers[j].name + " wins!");
                     PrintLine();
@@ -23,14 +40,14 @@ public class Mode {
         MainClass.SCANNER.nextLine();
     }
 
-    public static boolean pvc() {
-        Cards mainCards = new Cards();
+    public boolean pvc() {
         System.out.print("First, please type in your name: ");
-        Player player = new Player(mainCards, MainClass.SCANNER.nextLine());
-        Computer computer = new Computer(mainCards, "Your PC friend");
+        Player player = new Player(this, MainClass.SCANNER.nextLine());
+        Computer computer = new Computer(this, "Your PC friend");
         int top = start(mainCards);
         while (true) {
-            top = player.put(top, mainCards);
+            System.out.println(leftCards);
+            top = player.put(top);
             if (top == -1) {
                 return true;
             } else if (player.allUsed()) {
@@ -39,7 +56,7 @@ public class Mode {
                 PrintLine();
                 break;
             }
-            top = computer.put(top, mainCards, false);
+            top = computer.put(top, false);
             if (computer.allUsed()) {
                 PrintLine();
                 System.out.println("You lose... But I believe you will win next time!");
@@ -52,18 +69,18 @@ public class Mode {
         return false;
     }
 
-    public static int start(Cards mainCards) {
-        int top = mainCards.onePicked();
+    public int start(Cards mainCards) {
+        int top = mainCards.onePicked(leftCards,leftCards).getValue();
         PrintLine();
         System.out.println("It's time to begin our game! :)");
         return top;
     }
 
-    private static void PrintLine() {
+    private void PrintLine() {
         System.out.println("------------------------------------------------------------------------------------");
     }
 
-    public static void tutorial() {
+    public void tutorial() {
         PrintLine();
         System.out.println("从1－13各四张一副牌，开局抽5张。\n" +
                 "使用一张或者两张牌通过加减乘除四则运算计算凑出牌堆顶部的牌大小则可打出，\n" +
@@ -74,7 +91,7 @@ public class Mode {
         MainClass.SCANNER.nextLine();
     }
 
-    public static void statistics(int n, int pcNum) {
+    public void statistics(int n, int pcNum) {
         int[] usedCnt = new int[20];
         int[] easyCnt = new int[20];
         Computer[] computers;
@@ -82,13 +99,13 @@ public class Mode {
         int roundTimes = 0;
         for (int i = 0; i < n; i++) {
             boolean endPlay = false;
-            Cards mainCards = new Cards();
+            mainCards = new Cards();
             computers = generateComputers(mainCards, pcNum);
-            int top = mainCards.onePicked();
+            int top = mainCards.onePicked(leftCards,leftCards).getValue();
             boolean init = true;
             do {
                 for (int j = init ? i % pcNum : 0; j < pcNum; j++) {
-                    top = computers[j].noPrintPut(top, mainCards, usedCnt, easyCnt);
+                    top = computers[j].noPrintPut(top, usedCnt, easyCnt);
                     roundTimes++;
                     if (computers[j].allUsed()) {
                         WinTimes[j]++;
@@ -114,11 +131,11 @@ public class Mode {
         MainClass.SCANNER.nextLine();
     }
 
-    public static Computer[] generateComputers(Cards mainCards, int pcNum) {
+    public Computer[] generateComputers(Cards mainCards, int pcNum) {
         Computer[] computers = new Computer[pcNum];
         for (int i = 0; i < pcNum; i++) {
             char name = (char) ('A' + i);
-            computers[i] = new Computer(mainCards, Character.toString(name));
+            computers[i] = new Computer(this, Character.toString(name));
         }
         return computers;
     }

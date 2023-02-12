@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -7,27 +6,33 @@ public class Player extends User {
 
     public Pattern pattern = Pattern.compile(ansPattern);
 
-    public Player(Cards mainCards, String name) {
-        super(mainCards, name);
+    public Player(Mode mode, String name) {
+        super(mode, name);
     }
 
-    public int put(int top, Cards mainCards) {
-        ArrayList<Integer> myCards = getMyCards();
-        head(top, myCards);
-        String ans = MainClass.SCANNER.nextLine();
-        if(ans.equals("e")){
-            return -1;
-        }else{
-            return analyze(ans, mainCards, top);
+    public Player(GameTable gameTable) {
+        super(gameTable);
+        for (Card item : myCards) {
+            item.showCard();
         }
     }
 
-    public int analyze(String ans, Cards mainCards, int top) {
+    public int put(int top) {
+        head(top);
+        String ans = MainClass.SCANNER.nextLine();
+        if (ans.equals("e")) {
+            return -1;
+        } else {
+            return analyze(ans, top);
+        }
+    }
+
+    public int analyze(String ans, int top) {
         Matcher m = pattern.matcher(ans);
-        if(ans.equals("h")){
+        if (ans.equals("h")) {
             help();
             ans = MainClass.SCANNER.nextLine();
-            return analyze(ans, mainCards, top);
+            return analyze(ans, top);
         }
         while (!m.find()) {
             retypeWarning();
@@ -37,7 +42,7 @@ public class Player extends User {
         String itemA = m.group(1);
         String itemB = m.group(3);
         if (Integer.parseInt(itemA) == -1 && (itemB == null || itemB.isEmpty())) {
-            return pickCard(mainCards, top);
+            return pickCard(top);
         } else if (((itemB == null || itemB.isEmpty()) && (oneLegal(itemA, top))) ||
                 !(itemB == null || itemB.isEmpty()) && twoLegal(itemA, itemB, top)) {
             correct(itemA, itemB);
@@ -45,32 +50,32 @@ public class Player extends User {
         } else {
             retypeWarning();
             ans = MainClass.SCANNER.nextLine();
-            return analyze(ans, mainCards, top);
+            return analyze(ans, top);
         }
     }
 
     public void correct(String itemA, String itemB) {
-        myCards.remove(Integer.valueOf(itemA));
+        myCards.remove(myCards.contains(Integer.parseInt(itemA)), mode.getLeftCards());
         if (!(itemB == null || itemB.isEmpty())) {
-            myCards.remove(Integer.valueOf(itemB));
+            myCards.remove(myCards.contains(Integer.parseInt(itemB)), mode.getLeftCards());
         }
         PrintLine();
         System.out.println("Smart! Now let's see how the next one will deal with it!");
     }
 
 
-    public int pickCard(Cards mainCards, int top) {
-        int newCard = pickOne(mainCards);
+    public int pickCard(int top) {
+        Card newCard = mode.getMainCards().onePicked(myCards, mode.getLeftCards());
         PrintLine();
-        System.out.println("You get a \"" + newCard + "\".");
-        return put(top, mainCards);
+        System.out.println("You get a \"" + newCard.getValue() + "\".");
+        return put(top);
     }
 
     public boolean itemIsLegal(String item) {
         return item.matches("\\d+") && Integer.parseInt(item) >= 1 && Integer.parseInt(item) <= 13;
     }
 
-    public void head(int top, ArrayList<Integer> myCards) {
+    public void head(int top) {
         PrintLine();
         System.out.println(
                 "Dear " + name + ":\n"
@@ -84,13 +89,14 @@ public class Player extends User {
         System.out.println("Your answer or operation: ");
     }
 
-    public void help(){
+    public void help() {
         System.out.println("1. You can type in \"-1\" to pick one more card from the mainCards.");
         System.out.println("2. The first number you type in will be the next top number. ");
         System.out.println("3. Please type in one line.");
         PrintLine();
         System.out.println("Your answer or operation: ");
     }
+
     public void retypeWarning() {
         PrintLine();
         System.out.println(
@@ -103,7 +109,7 @@ public class Player extends User {
     public boolean oneLegal(String a, int top) {
         if (itemIsLegal(a)) {
             int item = Integer.parseInt(a);
-            return item == top && myCards.contains(item);
+            return item == top && (myCards.contains(item) != null);
         } else {
             return false;
         }
@@ -111,11 +117,14 @@ public class Player extends User {
 
     public boolean twoLegal(String a, String b, int top) {
         if (itemIsLegal(a) && itemIsLegal(b)) {
-            int itemA = Integer.parseInt(a);
-            int itemB = Integer.parseInt(b);
-            if (calLegal(itemA, itemB, top)) {
-                if (itemA == itemB) {
-                    return myCards.indexOf(itemA) != myCards.lastIndexOf(itemA);
+            Card itemA = myCards.contains(Integer.parseInt(a));
+            Card itemB = myCards.contains(Integer.parseInt(b));
+            if (itemA == null || itemB == null) {
+                return false;
+            }
+            if (calLegal(itemA.getValue(), itemB.getValue(), top)) {
+                if (itemA.getValue() == itemB.getValue()) {
+                    return myCards.indexOf(itemA.getValue()) != myCards.lastIndexOf(itemA.getValue());
                 }
                 return true;
             } else {
@@ -125,5 +134,7 @@ public class Player extends User {
             return false;
         }
     }
+
+
 }
 

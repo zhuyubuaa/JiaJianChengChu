@@ -2,30 +2,37 @@ import java.util.Scanner;
 
 public class MainClass {
     public static final Scanner SCANNER = new Scanner(System.in);
-
     public static void main(String[] args) {
+        new newGame();
+    }
+}
+
+class newGame {
+    public static final Scanner SCANNER = MainClass.SCANNER;
+    public newGame() {
         boolean exit = false;
         do {
             beginning();
             String op = SCANNER.nextLine();
+            Mode mode = new Mode();
             switch (op) {
                 case "1":
-                    exit = Mode.pvc();
+                    exit = mode.pvc();
                     break;
                 case "2":
-                    Mode.tutorial();
+                    mode.tutorial();
                     break;
                 case "3":
                     System.out.println("How many conputers do you want to imitate?");
                     int pcNum = SCANNER.nextInt();
-                    Mode.cvc(pcNum);
+                    mode.cvc(pcNum);
                     break;
                 case "s":
                     statisticsTips();
                     int n = SCANNER.nextInt();
                     System.out.println("How many conputers do you want to imitate?");
                     pcNum = SCANNER.nextInt();
-                    Mode.statistics(n, pcNum);
+                    mode.statistics(n, pcNum);
                     break;
                 case "e":
                     exit = true;
