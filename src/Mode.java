@@ -85,7 +85,7 @@ public class Mode {
         System.out.println("从1－13各四张一副牌，开局抽5张。\n" +
                 "使用一张或者两张牌通过加减乘除四则运算计算凑出牌堆顶部的牌大小则可打出，\n" +
                 "若手牌无法凑出牌堆顶牌，则摸牌，直到可以打出，当牌打光时获胜\n" +
-                "                                       --coward");
+                "在此游戏中，你选中的第一张牌将放置在牌堆顶。           --coward");
         PrintLine();
         System.out.println("Press enter to return to beginning.");
         MainClass.SCANNER.nextLine();

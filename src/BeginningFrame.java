@@ -110,9 +110,8 @@ public class BeginningFrame extends JFrame {
                         setLayout(new GridLayout(4, 1));
                         add(new tuLabel("从1－13各四张一副牌，开局抽5张。\n"));
                         add(new tuLabel("使用一张或者两张牌通过加减乘除四则运算计算凑出牌堆顶部的牌大小则可打出，\n"));
-                        add(new tuLabel("若手牌无法凑出牌堆顶牌，则摸牌，直到可以打出，当牌打光时获胜\n"));
-                        add(new tuLabel("                                      " +
-                                "--coward"));
+                        add(new tuLabel("若手牌无法凑出牌堆顶牌，则摸牌，直到可以打出，当牌打光时获胜。     --coward\n"));
+                        add(new tuLabel("在此游戏中，你选中的第一张牌将放置在牌堆顶。     "));
                     }
 
                     private class tuLabel extends JLabel {
